@@ -36,7 +36,10 @@ def upload_file(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
+            print("here before done \n")
             text = request.FILES['file'].read()
+            print(text)
+            print("here done \n")
             percent = form.cleaned_data['percent']
             if (_type == 'Extractive'):
                 summary = summarize(tokenized_sentence, percent)
