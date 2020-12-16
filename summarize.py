@@ -3,7 +3,7 @@ import os
 import re
 import math
 import operator
-from nltk.stem import WordNetLemmatizer
+from nltk.stem import *
 from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
 from preprocessing import preprocess
@@ -12,6 +12,7 @@ from preprocessing import preprocess
 nltk.download('averaged_perceptron_tagger')
 Stopwords = set(stopwords.words('english'))
 wordlemmatizer = WordNetLemmatizer()
+stemmer = SnowballStemmer("english")
 
 
 def lemmatize_words(words):
@@ -56,7 +57,6 @@ def pos_tagging(text):
 
 
 def tf_score(word, sentence):
-    freq_sum = 0
     word_frequency_in_sentence = 0
     len_sentence = len(sentence)
     for word_in_sentence in sentence.split():
@@ -75,7 +75,7 @@ def idf_score(no_of_sentences, word, sentences):
         sentence = [word for word in sentence if word.lower()
                     not in Stopwords and len(word) > 1]
         sentence = [word.lower() for word in sentence]
-        sentence = [wordlemmatizer.lemmatize(word) for word in sentence]
+        sentence = lemmatize_words(sentence)
         if word in sentence:
             no_of_sentence_containing_word = no_of_sentence_containing_word + 1
     idf = math.log10(no_of_sentences/no_of_sentence_containing_word)
@@ -86,38 +86,35 @@ def tf_idf_score(tf, idf):
     return tf*idf
 
 
-def word_tfidf(dict_freq, word, sentences, sentence):
-    word_tfidf = []
+def word_tfidf(word, sentences, sentence):
     tf = tf_score(word, sentence)
     idf = idf_score(len(sentences), word, sentences)
     tf_idf = tf_idf_score(tf, idf)
     return tf_idf
 
 
-def sentence_importance(sentence, dict_freq, sentences):
+def sentence_importance(sentence, sentences):
     sentence_score = 0
     sentence = remove_special_characters(str(sentence))
     sentence = re.sub(r'\d+', '', sentence)
     pos_tagged_sentence = []
-    no_of_sentences = len(sentences)
     pos_tagged_sentence = pos_tagging(sentence)
     for word in pos_tagged_sentence:
         if word.lower() not in Stopwords and word not in Stopwords and len(word) > 1:
             word = word.lower()
             word = wordlemmatizer.lemmatize(word)
             sentence_score = sentence_score + \
-                word_tfidf(dict_freq, word, sentences, sentence)
+                word_tfidf(word, sentences, sentence)
     return sentence_score
 
 
-def summarize(tokenized_words, tokenized_sentence):
-    word_freq = freq(tokenized_words)
+def summarize(tokenized_sentence):
     input_user = int(input('Percentage of information to retain(in percent):'))
     no_of_sentences = int((input_user * len(tokenized_sentence))/100)
     c = 1
     sentence_with_importance = {}
     for sent in tokenized_sentence:
-        sentenceimp = sentence_importance(sent, word_freq, tokenized_sentence)
+        sentenceimp = sentence_importance(sent, tokenized_sentence)
         sentence_with_importance[c] = sentenceimp
         c = c+1
     sentence_with_importance = sorted(

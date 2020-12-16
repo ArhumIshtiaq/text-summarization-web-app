@@ -14,7 +14,7 @@ def main():
             'https://en.wikipedia.org/wiki/Artificial_intelligence')
         article = scraped_data.read()
 
-        parsed_article = bs.BeautifulSoup(article, 'lxml')
+        parsed_article = bs.BeautifulSoup(article, 'html.parser')
 
         paragraphs = parsed_article.find_all('p')
 
@@ -23,14 +23,12 @@ def main():
         for p in paragraphs:
             text += p.text
     else:
-
         file = 'sample.txt'
         file = open(file, 'r')
         text = file.read()
 
     tokenized_sentence = sent_tokenize(text)
-    tokenized_words = preprocess(text)
-    summary = summarize(tokenized_words, tokenized_sentence)
+    summary = summarize(tokenized_sentence)
 
     print("\n")
     print("Summary:")
