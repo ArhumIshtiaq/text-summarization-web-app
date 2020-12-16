@@ -1,5 +1,5 @@
 from nltk.tokenize import sent_tokenize
-from preprocessing import preprocess
+from preprocessing import preprocess, remove
 from summarize import summarize
 import bs4 as bs
 import urllib.request
@@ -9,7 +9,7 @@ import re
 def main():
 
     source = input('press 1 for link or 0 for a file:')
-    if int(source):
+    if int(source) == 1:
         scraped_data = urllib.request.urlopen(
             'https://en.wikipedia.org/wiki/Artificial_intelligence')
         article = scraped_data.read()
@@ -26,14 +26,15 @@ def main():
         file = 'sample.txt'
         file = open(file, 'r')
         text = file.read()
+    summary = text
+    # tokenized_sentence = sent_tokenize(text)
+    # tokenized_words = preprocess(text)
+    # summary = summarize(tokenized_words, tokenized_sentence)
 
-    tokenized_sentence = sent_tokenize(text)
-    summary = summarize(tokenized_sentence)
+    # print("\n")
+    # print("Summary:")
 
-    print("\n")
-    print("Summary:")
-
-    print(summary)
+    # print(summary)
     outF = open('summary.txt', "w")
     outF.write(summary)
 
