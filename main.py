@@ -26,7 +26,7 @@ def main():
         file = 'sample.txt'
         file = open(file, 'r')
         text = file.read()
-    summary = text
+    summary = 
     # tokenized_sentence = sent_tokenize(text)
     # tokenized_words = preprocess(text)
     # summary = summarize(tokenized_words, tokenized_sentence)
