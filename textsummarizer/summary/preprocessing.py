@@ -9,7 +9,7 @@ wordlemmatizer = WordNetLemmatizer()
 
 
 def remove_special_characters(text):
-    regex = r'[^a-zA-Z0-9\s\n]'
+    regex = r'[^a-zA-Z0-9\s\r\n]'
     text = re.sub(regex, '', text)
     return text
 

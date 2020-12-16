@@ -18,5 +18,4 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('from_file/', views.upload_file, name='file_upload'),
 ]
