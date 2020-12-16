@@ -38,7 +38,7 @@ def upload_file(request):
         if form.is_valid():
             text = request.FILES['file'].read()
             percent = form.cleaned_data['percent']
-           if (_type == 'Extractive'):
+            if (_type == 'Extractive'):
                 summary = summarize(tokenized_sentence, percent)
                 return render(request, 'summary/summary.html', {'text': text, 'summary': summary, 'percent': "Not Applicable"})
             elif (_type == 'Abstractive'):
